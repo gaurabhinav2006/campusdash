@@ -17,18 +17,7 @@ Three.js source/license: https://github.com/mrdoob/three.js/tree/r160
 If you vendor the engine, retain its MIT license and copyright notice. Do not describe the third-party engine as original game code. The campus, characters and asset construction code were authored for this project; no claim of trademark clearance or exclusive ownership of generic genre mechanics is made.
 
 The game does not load files from this directory by default. Future assets should have a documented creator, source, license, and redistribution permission before being added.
-The project includes the supplied GLB character assets:
-
-- `boy.glb` — student runner
-- `girl.glb` — girl student runner
-- `professor.glb` — professor chaser
-
-These files are binary GLB assets and should be served over HTTP, not opened
-directly with `file://`. The files contain static meshes and materials; they
-do not contain skeleton skins or embedded animation clips. Campus Dash keeps
-the existing gameplay motion system and applies movement/jump/slide/catch
-transforms around the loaded models.
-
-The GLB loader dependencies are vendored in `vendor/GLTFLoader.js` and
-`vendor/BufferGeometryUtils.js`; keep both files when deploying to GitHub
-Pages.
+The game uses its original procedural student, girl-student and professor
+characters from the JavaScript modules. No external character models are
+loaded by the game. The preview page uses the same procedural rigs so it stays
+consistent with gameplay.

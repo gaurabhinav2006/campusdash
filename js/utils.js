@@ -25,7 +25,7 @@ export function loadSave() {
   try {
     const data=JSON.parse(localStorage.getItem('campusDash.v3')||'{}');
     const leaderboard=Array.isArray(data.leaderboard)?data.leaderboard.filter(row=>row&&typeof row.name==='string').map(row=>({name:row.name.slice(0,18),score:finite(row.score),distance:finite(row.distance),coins:finite(row.coins),date:row.date||''})).sort((a,b)=>b.score-a.score).slice(0,5):[];
-    return {best:finite(data.best??localStorage.getItem('campusDashBest')),total:finite(data.total??localStorage.getItem('campusDashTotalCoins')),muted:!!data.muted,debug:!!data.debug,name:typeof data.name==='string'?data.name.slice(0,18):'',character:['boy','girl','professor'].includes(data.character)?data.character:'boy',leaderboard};
+    return {best:finite(data.best??localStorage.getItem('campusDashBest')),total:finite(data.total??localStorage.getItem('campusDashTotalCoins')),muted:!!data.muted,debug:!!data.debug,name:typeof data.name==='string'?data.name.slice(0,18):'',character:data.character==='girl'?'girl':'boy',leaderboard};
   }
   catch(e){console.warn('Local progress unavailable; using memory.',e);return {best:0,total:0,muted:false,debug:false,name:'',leaderboard:[]};}
 }

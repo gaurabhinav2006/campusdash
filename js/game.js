@@ -1,22 +1,22 @@
 import * as THREE from 'three';
-import {CampusScene} from './scene.js?v=campus-dash-global-board-8';
-import {Player} from './player.js?v=campus-dash-global-board-8';
-import {Professor} from './professor.js?v=campus-dash-global-board-8';
-import {ChaseCamera} from './camera.js?v=campus-dash-global-board-8';
-import {Obstacles,HAZARDS} from './obstacles.js?v=campus-dash-global-board-8';
-import {Coins,POWER_TYPES} from './coins.js?v=campus-dash-global-board-8';
-import {Controls} from './controls.js?v=campus-dash-global-board-8';
-import {UI} from './ui.js?v=campus-dash-global-board-8';
-import {Audio} from './audio.js?v=campus-dash-global-board-8';
-import {GlobalLeaderboard} from './leaderboard.js?v=campus-dash-global-board-8';
-import {Particles,loadSave,saveProgress,clamp,damp,random,COLORS as C} from './utils.js?v=campus-dash-global-board-8';
+import {CampusScene} from './scene.js?v=campus-dash-global-board-9';
+import {Player} from './player.js?v=campus-dash-global-board-9';
+import {Professor} from './professor.js?v=campus-dash-global-board-9';
+import {ChaseCamera} from './camera.js?v=campus-dash-global-board-9';
+import {Obstacles,HAZARDS} from './obstacles.js?v=campus-dash-global-board-9';
+import {Coins,POWER_TYPES} from './coins.js?v=campus-dash-global-board-9';
+import {Controls} from './controls.js?v=campus-dash-global-board-9';
+import {UI} from './ui.js?v=campus-dash-global-board-9';
+import {Audio} from './audio.js?v=campus-dash-global-board-9';
+import {GlobalLeaderboard} from './leaderboard.js?v=campus-dash-global-board-9';
+import {Particles,loadSave,saveProgress,clamp,damp,random,COLORS as C} from './utils.js?v=campus-dash-global-board-9';
 export const STATES=Object.freeze({LOADING:'LOADING',MENU:'MENU',LEADERBOARD:'LEADERBOARD',PLAYING:'PLAYING',PAUSED:'PAUSED',GAME_OVER:'GAME_OVER'});
 const MOTIVATION_LINES=['Keep moving — your class is waiting!','One more stretch — you have got this!','Great run — stay sharp and keep going!','Every step gets you closer to class!','Eyes up, feet quick, finish strong!'];
 export class Game {
   constructor(canvas){
     this.state=STATES.LOADING;this.data=loadSave();this.world=new CampusScene(canvas);this.view=new ChaseCamera(innerWidth,innerHeight);
-    const scene=this.world.scene;this.player=new Player(scene);this.professor=new Professor(scene);this.obstacles=new Obstacles(scene);this.coins=new Coins(scene);this.particles=new Particles(scene);
-    this.ui=new UI(action=>this.action(action));this.ui.setName(this.data.name);this.ui.setNameLocked(Boolean(this.data.name));this.ui.setCharacterChoice(this.data.character);this.ui.host.addEventListener('namechange',e=>{if(!this.data.name)this.pendingName=e.detail.name;});this.pendingName=this.data.name;this.starting=false;this.characterAssets={};this.assetReady=false;this.assetsReady=this.loadAssets();this.audio=new Audio(this.data.muted);this.leaderboard=new GlobalLeaderboard();this.controls=new Controls(canvas,action=>this.action(action));
+    const scene=this.world.scene;this.player=new Player(scene,this.data.character);this.professor=new Professor(scene);this.obstacles=new Obstacles(scene);this.coins=new Coins(scene);this.particles=new Particles(scene);
+    this.ui=new UI(action=>this.action(action));this.ui.setName(this.data.name);this.ui.setNameLocked(Boolean(this.data.name));this.ui.setCharacterChoice(this.data.character);this.ui.host.addEventListener('namechange',e=>{if(!this.data.name)this.pendingName=e.detail.name;});this.pendingName=this.data.name;this.starting=false;this.audio=new Audio(this.data.muted);this.leaderboard=new GlobalLeaderboard();this.controls=new Controls(canvas,action=>this.action(action));
     this.bounds=new THREE.Box3();this.box=new THREE.Box3Helper(this.bounds,0x6affac);scene.add(this.box);
     this.aura=new THREE.Mesh(new THREE.SphereGeometry(1,14,10),new THREE.MeshBasicMaterial({color:0x86e0ff,wireframe:true,transparent:true,opacity:.15,depthWrite:false}));this.aura.position.y=1.2;this.aura.scale.set(.8,1.25,.8);this.player.root.add(this.aura);
     this.lastSubmit=null;this.last=performance.now();this.accumulator=0;this.fps=60;this.hudClock=0;this.saveClock=0;this.resetValues();this.resize();this.setState(STATES.MENU);
@@ -26,18 +26,16 @@ export class Game {
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.pause();this.fail('The graphics context was interrupted. Reload the page to restore it.');});
   }
   resetValues(){this.score=0;this.runCoins=0;this.distance=0;this.combo=0;this.speed=18;this.baseSpeed=18;this.gap=2.5;this.rowClock=0;this.rowIndex=0;this.safeLane=1;this.powers={boost:0,shield:0,magnet:0,multiplier:0};this.intro=0;this.catchTime=-1;this.shake=0;this.toast='';this.toastTime=0;this.dust=0;this.scoreRecorded=false;this.lastSpeedStage=0;this.lastDifficultyStage=0;this.lastMotivationStage=0;}
-  async loadAssets(){if(typeof fetch!=='function')return false;try{const {loadCharacterAsset}=await import('./asset-loader.js?v=campus-dash-global-board-8');const [boy,girl,professor]=await Promise.all([loadCharacterAsset('assets/boy.glb'),loadCharacterAsset('assets/girl.glb'),loadCharacterAsset('assets/professor.glb')]);this.characterAssets={boy,girl,professor};this.player.useAsset(this.characterAssets[this.data.character]||boy);this.professor.useAsset(professor);this.assetReady=true;return true;}catch(error){console.warn('GLB character assets could not be loaded; procedural fallback remains active.',error);return false;}}
-  applyCharacter(){if(this.assetReady)this.player.useAsset(this.characterAssets[this.data.character]||this.characterAssets.boy);}
   setState(state){this.state=state;this.ui.show(state);this.controls.cancel();this.accumulator=0;}
   start(){this.commit();this.resetValues();this.player.reset();this.professor.reset();this.obstacles.reset();this.coins.reset();this.particles.reset();this.intro=2;this.rowClock=1.1;this.spawnRow(-34);this.setState(STATES.PLAYING);this.audio.unlock();}
   pause(){if(this.state!==STATES.PLAYING)return;this.setState(STATES.PAUSED);this.commit();}
   commit(){this.data.best=Math.max(this.data.best,Math.floor(this.score));saveProgress(this.data);}
   recordScore(){if(this.scoreRecorded||!this.data.name||this.score<=0)return;const row={name:this.data.name,score:Math.floor(this.score),distance:Math.floor(this.distance),coins:Math.floor(this.runCoins),date:new Date().toISOString()};const existing=this.data.leaderboard.find(r=>r.name.toLowerCase()===row.name.toLowerCase());if(existing){if(row.score>existing.score){existing.score=row.score;existing.distance=row.distance;existing.coins=row.coins;existing.date=row.date;}}else this.data.leaderboard.push(row);this.data.leaderboard.sort((a,b)=>b.score-a.score);this.data.leaderboard=this.data.leaderboard.slice(0,5);this.scoreRecorded=true;this.lastSubmit=this.leaderboard.submit(row).then(result=>{if(!result.ok&&result.configured)this.message('Global score could not be submitted; check Supabase policies.');return result;});}
   async openLeaderboard(){this.setState(STATES.LEADERBOARD);this.ui.renderLeaderboard([],this.data.name,'Loading the shared leaderboard…');if(this.lastSubmit)await Promise.race([this.lastSubmit,new Promise(resolve=>setTimeout(resolve,1200))]);const result=await this.leaderboard.list(5);if(this.state!==STATES.LEADERBOARD)return;if(result.configured&&!result.error){this.ui.renderLeaderboard(result.rows,this.data.name,'Top 5 scores from everyone using this game link.');}else if(!result.configured){this.ui.renderLeaderboard(this.data.leaderboard,this.data.name,'Global leaderboard is not configured; showing this device\'s saved scores.');}else{this.ui.renderLeaderboard(this.data.leaderboard,this.data.name,`Global board request failed: ${result.error}`);}}
-  async prepareRun(){if(this.starting)return;const name=(this.data.name||this.pendingName||this.ui.getName()).trim().replace(/\s+/g,' ').slice(0,18);if(!name){this.ui.showNameHint(true,'Enter a unique name before you run.');return;}this.starting=true;try{if(!this.assetReady){this.ui.showNameHint(true,'Loading character models…');await this.assetsReady;}if(!this.data.name){this.ui.showNameHint(true,'Checking whether that name is available…');const result=await this.leaderboard.isNameAvailable(name);if(!result.available){this.ui.showNameHint(true,result.error||'That name is already taken. Choose another.');return;}this.data.name=name;this.pendingName=name;this.ui.setName(name);this.ui.setNameLocked(true);this.ui.showNameHint(false);this.commit();}this.applyCharacter();this.start();}finally{this.starting=false;}}
+  async prepareRun(){if(this.starting)return;const name=(this.data.name||this.pendingName||this.ui.getName()).trim().replace(/\s+/g,' ').slice(0,18);if(!name){this.ui.showNameHint(true,'Enter a unique name before you run.');return;}this.starting=true;try{if(!this.data.name){this.ui.showNameHint(true,'Checking whether that name is available…');const result=await this.leaderboard.isNameAvailable(name);if(!result.available){this.ui.showNameHint(true,result.error||'That name is already taken. Choose another.');return;}this.data.name=name;this.pendingName=name;this.ui.setName(name);this.ui.setNameLocked(true);this.ui.showNameHint(false);this.commit();}this.start();}finally{this.starting=false;}}
   action(a){
     if(a==='sound'){this.data.muted=!this.data.muted;this.audio.setMuted(this.data.muted);this.audio.unlock();this.commit();return;}
-    if(a==='character-boy'||a==='character-girl'){this.data.character=a.replace('character-','');this.ui.setCharacterChoice(this.data.character);this.applyCharacter();this.commit();return;}
+    if(a==='character-boy'||a==='character-girl'){this.data.character=a.replace('character-','');this.ui.setCharacterChoice(this.data.character);this.player.setCharacter(this.data.character);this.aura.parent?.remove(this.aura);this.player.root.add(this.aura);this.commit();return;}
     if(a==='debug'){this.data.debug=!this.data.debug;this.commit();return;}
     if(a==='play'||a==='restart'){this.prepareRun();return;}
     if(a==='leaderboard'){this.openLeaderboard();return;}

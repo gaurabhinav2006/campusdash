@@ -132,12 +132,8 @@ campus-dash/
 │   ├── audio.js       # Procedural sound effects
 │   ├── leaderboard.js  # Shared Supabase REST leaderboard
 │   ├── supabase-config.js # Public project URL/key placeholders
-│   └── utils.js       # Math, persistence, meshes, particles
-   ├── assets/
-   │   ├── boy.glb
-   │   ├── girl.glb
-   │   ├── professor.glb
-   │   └── README.md
+   │   └── utils.js       # Math, persistence, meshes, particles
+   ├── assets/README.md    # Character asset notes
 ├── supabase/schema.sql
 ├── vendor/three.module.js
 └── README.md
@@ -224,8 +220,8 @@ The previous standalone `campus-dash.html` is intentionally left unchanged outsi
 
 ## Character preview — approval only
 
-Open `character-preview.html` from the local server to review the supplied
-student, girl student and professor GLB assets. The preview includes standing,
-running, jumping, sliding and catching presentation poses, plus front,
-left-side and back reference views. The main game loads these assets from
-`assets/` and keeps a procedural fallback if a browser cannot load a GLB.
+Open `character-preview.html` from the local server to review the original
+procedural student, girl student and professor characters. The preview
+includes standing, running, jumping, sliding and catching presentation poses,
+plus front, left-side and back reference views. No GLB character files are
+loaded by the game.
