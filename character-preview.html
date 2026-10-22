@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>Campus Dash Character Preview</title>
+  <link rel="stylesheet" href="css/character-preview.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head>
+<body>
+  <main class="previewShell">
+    <section class="previewStage">
+      <canvas id="previewCanvas" aria-label="3D character preview"></canvas>
+      <div class="stageBadge">PREVIEW ONLY · NOT INTEGRATED</div>
+      <div class="stageHelp">Drag to orbit · pinch/scroll to zoom</div>
+    </section>
+    <section class="previewPanel">
+      <div class="eyebrow">Campus Dash character study</div>
+      <h1>Choose a runner</h1>
+      <p>These are the supplied GLB characters loaded directly for review before gameplay approval.</p>
+      <div class="choiceGroup" aria-label="Character choices">
+        <button class="choice active" data-character="student">Student</button>
+        <button class="choice" data-character="girl">Girl student</button>
+        <button class="choice" data-character="professor">Professor</button>
+      </div>
+      <h2>Pose preview</h2>
+      <div class="choiceGroup" aria-label="Pose choices">
+        <button class="pose active" data-pose="idle">Standing</button>
+        <button class="pose" data-pose="run">Running</button>
+        <button class="pose" data-pose="jump">Jumping</button>
+        <button class="pose" data-pose="slide">Sliding</button>
+        <button class="pose" data-pose="catch">Catching</button>
+      </div>
+      <h2>Reference view</h2>
+      <div class="choiceGroup" aria-label="Reference views">
+        <button class="view active" data-view="front">Front</button>
+        <button class="view" data-view="left">Left side</button>
+        <button class="view" data-view="back">Back</button>
+      </div>
+      <div class="previewNote"><strong>Approval checkpoint</strong><span>Nothing here changes the game. Review the characters and poses first.</span></div>
+    </section>
+  </main>
+  <script type="module" src="js/character-preview.js"></script>
+</body>
+</html>

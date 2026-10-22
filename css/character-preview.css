@@ -1,0 +1,15 @@
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff7e8;background:#102f2d;font-synthesis:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% 0,#356d61 0,#102f2d 58%,#09201f 100%)}
+body{padding:14px}
+.previewShell{width:min(1120px,100%);margin:auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(290px,.65fr);gap:14px;min-height:calc(100dvh - 28px)}
+.previewStage{position:relative;min-height:620px;overflow:hidden;border:1px solid #f1c68144;border-radius:26px;background:linear-gradient(#dfe9dc,#9db8a3 70%,#6f9477);box-shadow:0 24px 70px #04151488}
+#previewCanvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}
+.stageBadge,.stageHelp{position:absolute;left:16px;border-radius:999px;background:#123932d9;border:1px solid #f3ce9166;padding:8px 12px;color:#ffe0ac;font-size:10px;letter-spacing:.1em;text-transform:uppercase;pointer-events:none}
+.stageBadge{top:16px}.stageHelp{bottom:16px;color:#d9e7d4;letter-spacing:0;text-transform:none}
+.previewPanel{align-self:center;padding:24px;border:1px solid #f1c68155;border-radius:26px;background:linear-gradient(155deg,#173e39f5,#102e2df5);box-shadow:0 24px 70px #04151466}
+.eyebrow{color:#efb66a;font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+h1{margin:12px 0 8px;font-size:clamp(30px,5vw,46px);line-height:1;color:#fff8e8}h2{margin:24px 0 10px;font-size:16px;color:#ffe1ac}p{color:#d4e2d1;line-height:1.55;font-size:13px}
+.choiceGroup{display:flex;flex-wrap:wrap;gap:8px}.choice,.pose,.view{min-height:42px;border:1px solid #fff5df2e;border-radius:12px;padding:9px 12px;background:#ffffff0d;color:#fff8e8;font:inherit;font-size:12px;font-weight:750;cursor:pointer}.choice.active,.pose.active,.view.active{background:#efb66a;color:#153b36;border-color:#efb66a;box-shadow:0 3px 0 #a16b39}.choice:focus-visible,.pose:focus-visible,.view:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.previewNote{display:grid;gap:4px;margin-top:24px;padding:13px;border:1px solid #ffffff20;border-radius:14px;background:#ffffff0a;color:#f9d79a;font-size:12px}.previewNote span{color:#c7d9c5;font-size:11px;line-height:1.45}
+@media(max-width:780px){body{padding:8px}.previewShell{display:flex;flex-direction:column;min-height:calc(100dvh - 16px)}.previewStage{min-height:62dvh;flex:1}.previewPanel{padding:18px}.stageHelp{font-size:9px}.previewPanel h2{margin-top:17px}}
