@@ -1,6 +1,6 @@
 // Dynamic import lets dependency/network/WebGL failures reach a useful screen.
 try {
-  const {Game}=await import('./game.js?v=campus-dash-global-board-9');
+  const {Game}=await import('./game.js?v=campus-dash-global-board-10');
   const game=new Game(document.getElementById('gameCanvas'));
   function frame(now){try{game.frame(now);requestAnimationFrame(frame);}catch(error){console.error('Game loop stopped safely.',error);game.pause();game.fail('An unexpected error stopped the game. Check the browser console, then reload.');}}
   requestAnimationFrame(frame);
